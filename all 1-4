@@ -1,0 +1,150 @@
+2.Develop a simple web application using Flask that allows users to register for an event. 
+Containerize the application using Docker and run it in a Docker container
+
+3.Implement GitHub Actions CI/CD for a Python/Flask app.
+
+4. 4.Create a Flask application and push the code to GitHub.
+
+flask_event_registration/
+├── app.py
+├── requirements.txt
+├── Dockerfile
+└── templates/
+    └── register.html
+
+---------------------------------------------------------------------------------
+app.py :
+from flask import Flask, request, render_template
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        return f'Thank you, {name}! You have registered with email: {email}'
+    return render_template('register.html')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+--------------------------------------------------------------------------------------
+✅ requirements.txt
+Flask==2.3.2
+---------------------------------------------------------------------------------------
+🔹 Step 4: Create the Dockerfile
+
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["python", "app.py"]
+---------------------------------------------------------------------------------------
+templates/register.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Registration</title>
+</head>
+<body>
+    <h2>Register for the Event</h2>
+    <form method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
+---------------------------------------------------------------------------------------
+docker ps
+docker stop festive_ardinghelli
+
+docker build -t flask-event-app
+docker run -p 5000:5000 flask-event-app
+-----------------------------------------------------------------------------------------
+
+practical 3 : 3.Implement GitHub Actions CI/CD for a Python/Flask app.
+
+STEP 4: ✅ Create GitHub Actions Workflow (CI/CD)
+Go to the repo homepage
+
+Click Add file → Create new file
+
+Name the file exactly:.github/workflows/flask-ci.yml
+
+
+Paste the following CI/CD workflow code:
+
+name: Flask CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Flask app (test run)
+      run: |
+        python app.py &
+        sleep 5
+        echo "Flask ran successfully"
+-----------------------------------------------------------------------------------------
+4.Create a Flask application and push the code to GitHub.
+✅ Step 5: Add README.md (Optional)
+Click Add file > Create new file
+
+Name: README.md
+
+Paste this:
+
+                # Flask Event App
+                
+                A simple Flask app with Docker and GitHub Actions CI/CD.
+                
+                ## Run Locally
+                ```bash
+                pip install -r requirements.txt
+                python app.py
+
+Run with Docker:
+
+docker build -t flask-event-app .
+docker run -p 5000:5000 flask-event-app
+
+docker ps
+docker stop jolly_banach
+docker run -p 5000:5000 flask-event-app
+docker run -p 5001:5000 flask-event-app
+----------------------------------------------------------------------------------------------
+
+
+
